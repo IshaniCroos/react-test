@@ -1,25 +1,31 @@
-import logo from './logo.svg';
+import React, {Component} from 'react';
+import Login from './components/Login.js'
+import CalApp from './calculations/app';
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import {BrowserRouter, Router, Switch, Route, Redirect} from 'react-router-dom';
+
+
+class App extends Component {
+  render() {
+    return (
+      <div>
+       
+
+            <BrowserRouter>
+                      <Switch>
+                          <Route path="/" exact  name="Home" render={props => <Login {...props}/>}/>
+                          <Route path="/app" exact  name="Main" render={props => <CalApp {...props}/>} />
+                      </Switch>
+              </BrowserRouter>
+
+
+
+        
+      </div>
+    );
+  }
 }
 
 export default App;
