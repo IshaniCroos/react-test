@@ -3,68 +3,87 @@ import axios from 'axios';
 import css from '../calculations/style.css';
 
 
-const getFetched = () => {
-  return(new Promise(async(resolve,reject) => {
-    axios.get('https://restcountries.eu/rest/v2/all')
-    .then((res) => {
-      resolve(res.data)
-    })
-    .catch((err) => {
-      console.log('no responce fetched')
-      reject(false)
-    })
-
-  }))
-
-}
-
-const getLocations = (reqData) => {
+const getLocations = () => {
+    //e.preventDefault();
+    //callback function would be to call toggleAuth
     return(new Promise(async(resolve,reject) => {
+      /*axios
+        .get("/auth/local",thita)
+        .then((res) => {
+          console.log(res);
+          if (res.status == 200){
+            cb(true)
+            //window.location = "./app"
+            props.history.push("./app")
+          }
+        })
+        .catch((err) => console.log(err))
+      //await resolve(cb());*/
 
-      let positionData;
+        //console.log(this.props)
 
-      positionData = reqData.map((data) => {
-        let c = [data.latlng,data.cioc]
-        return c
+        let positionData;
+
+      axios.get('https://restcountries.eu/rest/v2/all')
+      .then((res) => {
+          positionData = res.data.map((data) => {
+            let c = [data.timezones,data.cioc]
+            return c
+          })
+        }).then(() => {
+          resolve(positionData)
+        })
+      .catch(function (error) {
+        console.log(error);
+        reject(false)
       })
+      .then(function () {
+        console.log("great")
+        reject(true)
+      });
 
-      resolve(positionData)
+
+
 
 
     }))
   }
+
+
+
+
 
 class App extends Component {
 
       constructor(props) {
         super(props);
         this.state = {
-              fullDataResponce: [],
               locations: [],
-              country1Input: '',
-              country2Input: '',
+              timezone1Input: '',
+              timezone2Input: '',
               distanceBetween: 'From Which location to Which location?'
         };
       }
 
 
     country1Change = (e) => {
-      this.setState({country1Input : e.target.value})
-      console.log(this.state.country1Input)
+      this.setState({timezone1Input : e.target.value})
+      console.log(this.state.timezone1Input)
     }
 
     country2Change = (e) => {
-      this.setState({country2Input : e.target.value})
-      console.log(this.state.country2Input)
+      this.setState({timezone2Input : e.target.value})
+      console.log(this.state.timezone2Input)
     }
 
     distanceCalculator = (e) => {
       e.preventDefault()
-      
+      //console.log(this.state.country1Input,this.state.country2Input)
 
       let lat1,lon1,lat2,lon2 = '';
       this.state.locations.map((data) => {
-        
+        //if (data[1])
+        //console.log(data[1])
         if(data[1] !== null){
           if ( data[1].trim() === this.state.country1Input.trim()){
             console.log(data[1],'ddddd')
@@ -80,7 +99,6 @@ class App extends Component {
             lon2 = data[0][1]
           }
         }
-        return null
       })
 
       //if 
@@ -112,20 +130,41 @@ class App extends Component {
     }
 
   
-    componentDidMount() {
 
-    getFetched('https://restcountries.eu/rest/v2/all')
-      .then((res) => {
-        this.setState({fullDataResponse : res})
-      }).then(() => {
-        //creating the data global
-        this.props.dataResponseHandle(this.state.fullDataResponse);
-        //getting the locations and store in the location dataStructure
-        getLocations(this.state.fullDataResponse).then((fetchedData) => {
-          this.setState({'locations' : fetchedData})
+
+
+
+    componentDidMount() {
+        //this.saySomething("component did mount");
+
+        let values = [1,2,3,4]; 
+
+        /*let newValues = values.map((v) => {
+          return [v *v, v*v*v,v+1] ;
+        }).reduce((a, c) => {
+        
+          return a.concat(c); 
+        });*/ 
+
+        
+        //console.log(newValues); 
+        console.log(this.state.message)
+
+        //created an array datastructure to store data
+        let positionData;
+        //position data calculations
+        getLocations().then((fetchedData) => {
+          this.state.locations = fetchedData;
+          console.log(fetchedData)
+        }).then(() => {
+          console.log(this.state.locations)
         })
-      })
-            
+
+        
+
+
+
+        
     }
 
   render() {
@@ -145,7 +184,10 @@ class App extends Component {
             <input type="text" onChange={(e) => this.country2Change(e)} className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Longitude" />
             <small id="emailHelp" className="form-text text-muted">Put the country where you are going to. ex: CHN. for China</small>
           </div>
-
+          {/*<div className="form-check">
+            <input type="checkbox" className="form-check-input" id="exampleCheck1" />
+            <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
+            </div>*/}
           <button type="submit" className="btn btn-primary">Submit</button>
           <br>
           </br>
@@ -155,12 +197,24 @@ class App extends Component {
         </form>
 
 
+
+
+
       {
         () => {
           console.log("jojo")
         }
       }
-    
+      {/*<span>fdjhfdjfhdj jhj </span>
+      <button type="button" className="btn btn-primary">Primary</button>
+      <button type="button" className="btn btn-secondary">Secondary</button>
+      <button type="button" className="btn btn-success">Success</button>
+      <button type="button" className="btn btn-danger">Danger</button>
+      <button type="button" className="btn btn-warning">Warning</button>
+      <button type="button" className="btn btn-info">Info</button>
+      <button type="button" className="btn btn-light">Light</button>
+      <button type="button" className="btn btn-dark">Dark</button>*/}
+
       </div>
       
     );
